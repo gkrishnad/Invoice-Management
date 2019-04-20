@@ -43,12 +43,13 @@ type SmartContract struct {
 
 // Define the letter of credit
 type LetterOfCredit struct {
-	LCId			string		`json:"lcId"`
-	ExpiryDate		string		`json:"expiryDate"`
-	Buyer    string   `json:"buyer"`
-	Bank		string		`json:"bank"`
-	Seller		string		`json:"seller"`
-	Amount			int		`json:"amount"`
+	InvoiceId		string		`json:"invoiceId"`
+	InvoiceDate		string		`json:"invoiceDate"`
+	Supplier    	string   	`json:"supplier"`
+	Customer		string		`json:"customer"`	
+	PaymentTerms	string		`json:"paymentTerms"`
+	Amount			int			`json:"amount"`
+	Notes			string		`json:"notes"`
 	Status			string		`json:"status"`
 }
 
@@ -62,16 +63,16 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	// Retrieve the requested Smart Contract function and arguments
 	function, args := APIstub.GetFunctionAndParameters()
 	// Route to the appropriate handler function to interact with the ledger appropriately
-	if function == "requestLC" {
-		return s.requestLC(APIstub, args)
-	} else if function == "issueLC" {
-		return s.issueLC(APIstub, args)
-	} else if function == "acceptLC" {
-		return s.acceptLC(APIstub, args)
-	}else if function == "getLC" {
-		return s.getLC(APIstub, args)
-	}else if function == "getLCHistory" {
-		return s.getLCHistory(APIstub, args)
+	if function == "issueInvoice" {
+		return s.issueInvoice(APIstub, args)
+	} else if function == "acceptInvoice" {
+		return s.acceptInvoice(APIstub, args)
+	} else if function == "payInvoice" {
+		return s.payInvoice(APIstub, args)
+	}else if function == "getInvoice" {
+		return s.getInvoice(APIstub, args)
+	}else if function == "getInvoiceHistory" {
+		return s.getInvoiceHistory(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -82,24 +83,25 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 
 
 // This function is initiate by Buyer 
-func (s *SmartContract) requestLC(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) issueInvoice(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	lcId := args[0];
-	expiryDate := args[1];
-	buyer := args[2];
-	bank := args[3];
-	seller := args[4];
+	invoiceId := args[0];
+	invoiceDate := args[1];
+	supplier := args[2];
+	customer := args[3];
+	paymentTerms := args[4];
+	notes := args[6];
 	amount, err := strconv.Atoi(args[5]);
 	if err != nil {
 		return shim.Error("Not able to parse Amount")
 	}
 
 
-	LC := LetterOfCredit{LCId: lcId, ExpiryDate: expiryDate, Buyer: buyer, Bank: bank, Seller: seller, Amount: amount, Status: "Requested"}
+	LC := LetterOfCredit{InvoiceId: invoiceId, InvoiceDate: invoiceDate, Supplier: supplier, Customer: customer, PaymentTerms: paymentTerms, Amount: amount, Notes: notes, Status: "Issued"}
 	LCBytes, err := json.Marshal(LC)
 
-    APIstub.PutState(lcId,LCBytes)
-	fmt.Println("LC Requested -> ", LC)
+    APIstub.PutState(invoiceId,LCBytes)
+	fmt.Println("Invoice Issued -> ", LC)
 
 	
 
@@ -107,65 +109,65 @@ func (s *SmartContract) requestLC(APIstub shim.ChaincodeStubInterface, args []st
 }
 
 // This function is initiate by Seller
-func (s *SmartContract) issueLC(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) acceptInvoice(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	lcId := args[0];
+	invoiceId := args[0];
 	
 	// if err != nil {
 	// 	return shim.Error("No Amount")
 	// }
 
-	LCAsBytes, _ := APIstub.GetState(lcId)
+	LCAsBytes, _ := APIstub.GetState(invoiceId)
 
 	var lc LetterOfCredit
 
 	err := json.Unmarshal(LCAsBytes, &lc)
 
 	if err != nil {
-		return shim.Error("Issue with LC json unmarshaling")
+		return shim.Error("Issue with Invoice json unmarshaling")
 	}
 
 
-	LC := LetterOfCredit{LCId: lc.LCId, ExpiryDate: lc.ExpiryDate, Buyer: lc.Buyer, Bank: lc.Bank, Seller: lc.Seller, Amount: lc.Amount, Status: "Issued"}
+	LC := LetterOfCredit{InvoiceId: lc.InvoiceId, InvoiceDate: lc.InvoiceDate, Supplier: lc.Supplier, Customer: lc.Customer, PaymentTerms: lc.PaymentTerms, Amount: lc.Amount, Notes: lc.Notes, Status: "Accepted"}
 	LCBytes, err := json.Marshal(LC)
 
 	if err != nil {
-		return shim.Error("Issue with LC json marshaling")
+		return shim.Error("Issue with Invoice json marshaling")
 	}
 
-    APIstub.PutState(lc.LCId,LCBytes)
-	fmt.Println("LC Issued -> ", LC)
+    APIstub.PutState(lc.InvoiceId,LCBytes)
+	fmt.Println("Invoice Accepted -> ", LC)
 
 
 	return shim.Success(nil)
 }
 
-func (s *SmartContract) acceptLC(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) payInvoice(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	lcId := args[0];
+	invoiceId := args[0];
 	
 	
 
-	LCAsBytes, _ := APIstub.GetState(lcId)
+	LCAsBytes, _ := APIstub.GetState(invoiceId)
 
 	var lc LetterOfCredit
 
 	err := json.Unmarshal(LCAsBytes, &lc)
 
 	if err != nil {
-		return shim.Error("Issue with LC json unmarshaling")
+		return shim.Error("Issue with Invoice json unmarshaling")
 	}
 
 
-	LC := LetterOfCredit{LCId: lc.LCId, ExpiryDate: lc.ExpiryDate, Buyer: lc.Buyer, Bank: lc.Bank, Seller: lc.Seller, Amount: lc.Amount, Status: "Accepted"}
+	LC := LetterOfCredit{InvoiceId: lc.InvoiceId, InvoiceDate: lc.InvoiceDate, Supplier: lc.Supplier, Customer: lc.Customer, PaymentTerms: lc.PaymentTerms, Amount: lc.Amount, Notes: lc.Notes, Status: "Paid"}
 	LCBytes, err := json.Marshal(LC)
 
 	if err != nil {
-		return shim.Error("Issue with LC json marshaling")
+		return shim.Error("Issue with Invoice json marshaling")
 	}
 
-    APIstub.PutState(lc.LCId,LCBytes)
-	fmt.Println("LC Accepted -> ", LC)
+    APIstub.PutState(lc.InvoiceId,LCBytes)
+	fmt.Println("Invoice Paid -> ", LC)
 
 
 	
@@ -173,28 +175,28 @@ func (s *SmartContract) acceptLC(APIstub shim.ChaincodeStubInterface, args []str
 	return shim.Success(nil)
 }
 
-func (s *SmartContract) getLC(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) getInvoice(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	lcId := args[0];
+	invoiceId := args[0];
 	
 	// if err != nil {
 	// 	return shim.Error("No Amount")
 	// }
 
-	LCAsBytes, _ := APIstub.GetState(lcId)
+	LCAsBytes, _ := APIstub.GetState(invoiceId)
 
 	return shim.Success(LCAsBytes)
 }
 
-func (s *SmartContract) getLCHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) getInvoiceHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	lcId := args[0];
+	invoiceId := args[0];
 	
 	
 
-	resultsIterator, err := APIstub.GetHistoryForKey(lcId)
+	resultsIterator, err := APIstub.GetHistoryForKey(invoiceId)
 	if err != nil {
-		return shim.Error("Error retrieving LC history.")
+		return shim.Error("Error retrieving Invoice history.")
 	}
 	defer resultsIterator.Close()
 
@@ -206,7 +208,7 @@ func (s *SmartContract) getLCHistory(APIstub shim.ChaincodeStubInterface, args [
 	for resultsIterator.HasNext() {
 		response, err := resultsIterator.Next()
 		if err != nil {
-			return shim.Error("Error retrieving LC history.")
+			return shim.Error("Error retrieving Invoice history.")
 		}
 		// Add a comma before array members, suppress it for the first array member
 		if bArrayMemberAlreadyWritten == true {
@@ -242,7 +244,7 @@ func (s *SmartContract) getLCHistory(APIstub shim.ChaincodeStubInterface, args [
 	}
 	buffer.WriteString("]")
 
-	fmt.Printf("- getLCHistory returning:\n%s\n", buffer.String())
+	fmt.Printf("- getInvoiceHistory returning:\n%s\n", buffer.String())
 
 	
 
