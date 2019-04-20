@@ -1,9 +1,9 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Swagger HLF Trade Finance.",
+        "description": "Swagger - Invoice Management System.",
         "version": "1.0.0",
-        "title": "Swagger HLF Trade Finance",
+        "title": "Invoice Management System",
         
         "contact": {
             "email": ""
@@ -20,12 +20,12 @@
         "http"
     ],
     "paths": {
-        "/requestLC": {
+        "/issueInvoice": {
             "post": {
                 
-                "summary": "Request LC",
-                "description": "Request LC",
-                "operationId": "requestLC",
+                "summary": "Issue Invoice",
+                "description": "Issue Invoice",
+                "operationId": "issueInvoice",
                 "consumes": [
                     "application/json"
                 ],
@@ -36,10 +36,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "LC object",
+                        "description": "INVOICE object",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/LC"
+                            "$ref": "#/definitions/INVOICE"
                         }
                     }
                 ],
@@ -50,12 +50,12 @@
                 }
             }
         },
-        "/issueLC": {
+        "/acceptInvoice": {
             "post": {
                 
-                "summary": "Issue LC",
-                "description": "Issue LC",
-                "operationId": "issueLC",
+                "summary": "Accept Invoice",
+                "description": "Accept Invoice",
+                "operationId": "acceptInvoice",
                 "consumes": [
                     "application/json"
                 ],
@@ -66,10 +66,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "LC ID object",
+                        "description": "INVOICE ID object",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/LCID"
+                            "$ref": "#/definitions/INVOICEID"
                         }
                     }
                 ],
@@ -80,12 +80,12 @@
                 }
             }
         },
-        "/acceptLC": {
+        "/payInvoice": {
             "post": {
                 
-                "summary": "Accept LC",
-                "description": "Accept LC",
-                "operationId": "acceptLC",
+                "summary": "Pay Invoice",
+                "description": "Pay Invoice",
+                "operationId": "payInvoice",
                 "consumes": [
                     "application/json"
                 ],
@@ -96,10 +96,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "LC ID object",
+                        "description": "INVOICE ID object",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/LCID"
+                            "$ref": "#/definitions/INVOICEID"
                         }
                     }
                 ],
@@ -110,12 +110,12 @@
                 }
             }
         },
-        "/getLC": {
+        "/getInvoice": {
             "post": {
                 
-                "summary": "Get LC",
-                "description": "Get LC",
-                "operationId": "getLC",
+                "summary": "Get Invoice",
+                "description": "Get Invoice",
+                "operationId": "getInvoice",
                 "produces": [
                     "application/json"
                 ],
@@ -123,10 +123,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "LC object",
+                        "description": "INVOICE ID object",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/LCID"
+                            "$ref": "#/definitions/INVOICEID"
                         }
                     }
                 ],
@@ -136,7 +136,7 @@
                         "schema": {
                             "type": "object",
                             "items": {
-                                "$ref": "#/definitions/LC"
+                                "$ref": "#/definitions/INVOICE"
                             }
                         }
                     },
@@ -146,12 +146,12 @@
                 }
             }
         },
-        "/getLCHistory": {
+        "/getInvoiceHistory": {
             "post": {
                 
-                "summary": "Get LC History",
-                "description": "Get LC History",
-                "operationId": "getLCHistory",
+                "summary": "Get Invoice History",
+                "description": "Get Invoice History",
+                "operationId": "getInvoiceHistory",
                 "produces": [
                     "application/json"
                 ],
@@ -159,10 +159,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "LC object",
+                        "description": "INVOICE ID object",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/LCID"
+                            "$ref": "#/definitions/INVOICEID"
                         }
                     }
                 ],
@@ -172,7 +172,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/LC"
+                                "$ref": "#/definitions/INVOICE"
                             }
                         }
                     },
@@ -184,41 +184,45 @@
         }
     },
     "definitions": {
-        "LC": {
+        "INVOICE": {
             "type": "object",
             "properties": {
-                "lcId": {
+                "invoiceId": {
                     "type": "string",
-                    "description": "LC ID"
+                    "description": "Invoice ID"
                 },
-                "buyer": {
+                "invoiceDate": {
                     "type": "string",
-                    "description": "Buyer ID"
+                    "description": "Invoice Date"
                 },
-                "bank": {
+                "supplier": {
                     "type": "string",
-                    "description": "Bank ID"
+                    "description": "Supplier"
                 },
-                "seller": {
+                "customer": {
                     "type": "string",
-                    "description": "Seller ID"
+                    "description": "Customer"
                 },
-                "expiryDate": {
+                "paymentTerms": {
                     "type": "string",
-                    "description": "LC Expiry date"
+                    "description": "Payment Terms"
                 },
                 "amount": {
                     "type": "string",
-                    "description": "LC Amount"
+                    "description": "Invoice Amount"
+                },
+				"notes": {
+                    "type": "string",
+                    "description": "notes"
                 }
             }
         },
-        "LCID": {
+        "INVOICEID": {
             "type": "object",
             "properties": {
-                "lcId": {
+                "invoiceId": {
                     "type": "string",
-                    "description": "LC ID"
+                    "description": "Invoice Id"
                 }
             }
         }
