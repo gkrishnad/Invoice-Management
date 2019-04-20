@@ -1,4 +1,4 @@
-# Invoice Management on Hyperledger Fabric (*** Only Request, Issue and Accept Letter of Credit workflow implemented ***)
+# Invoice Management on Hyperledger Fabric (*** Only Issue, Accept, Pay, View and History Details of Invoice implemented ***)
 Trade finance application on Hyperledger Fabric
 
 *** Use sudo prefix to commands if you get permission denied error while executing any command, assumption is you already have  required software to run Hyperledger fabric network and node SDK *** 
