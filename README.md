@@ -1,4 +1,4 @@
-# Trade finance on Hyperledger Fabric (*** Only Request, Issue and Accept Letter of Credit workflow implemented ***)
+# Invoice Management on Hyperledger Fabric (*** Only Request, Issue and Accept Letter of Credit workflow implemented ***)
 Trade finance application on Hyperledger Fabric
 
 *** Use sudo prefix to commands if you get permission denied error while executing any command, assumption is you already have  required software to run Hyperledger fabric network and node SDK *** 
@@ -47,123 +47,129 @@ http://localhost:3000/api-docs
 
 ## API definition if you want to run APIs using some rest client like Postman etc. 
 
-### Request LC (Letter of Credit)
-  1. URL -> http://localhost:3000/tfbc/requestLC
+### Issue Invoice
+  1. URL -> http://localhost:3000/tfbc/issueInvoice
   2. Http Method -> Post
   3. content-type: application/json
   4. Input->
   {
-	"lcId": "LC001",
-	"expiryDate": "31-Dec-2018",
-	"buyer": "buyerUser",
-	"bank": "bankUser",
-	"seller": "sellerUser",
-	"amount": "100000"
+  	"invoiceId": "KB200",
+  	"invoiceDate": "20-04-2019",
+  	"supplier": "Kill Bill",
+  	"customer": "Talent Sprint",
+  	"paymentTerms": "days 30",
+  	"amount": "50000",
+  	"notes": "good payment"
   }
   5. Output-> 
   {
     "code": "200",
-    "message": "LC requested successsfully."
+    "message": "Invoice issued successsfully."
   }
-### Issue LC (Letter of Credit)
+### Accept Invoice
 
- 1. URL -> http://localhost:3000/tfbc/issueLC
+ 1. URL -> http://localhost:3000/tfbc/acceptInvoice
  2. Http Method -> Post
  3. content-type: application/json
  4. Input->
   {
-	"lcId": "LC001"
+	"invoiceId": "KB200"
   }
  5. Output-> 
   {
     "code": "200",
-    "message": "LC issued successsfully."
+    "message": "Invoice accepted successsfully."
   }
-### Accept LC (Letter of Credit)
- 1. URL -> http://localhost:3000/tfbc/acceptLC
+### Pay Invoice
+ 1. URL -> http://localhost:3000/tfbc/payInvoice
  2. Http Method -> Post
  3. content-type: application/json
  4. Input->
   {
-	"lcId": "LC001"
+	"invoiceId": "KB200"
   }
  5. Output-> 
   {
     "code": "200",
-    "message": "LC accepted successsfully."
+    "message": "Invoice paid successsfully."
   }
-### Get LC Details 
- 1. URL -> http://localhost:3000/tfbc/getLC
+### Get Invoice Details 
+ 1. URL -> http://localhost:3000/tfbc/getInvoice
  2. Http Method -> Post
  3. content-type: application/json
  4. Input->
  {
-	"lcId": "LC001"
+	"invoiceId": "KB200"
   }
  5. Output-> 
   {
-	"lcId": "LC001",
-	"expiryDate": "31-Dec-2018",
-	"buyer": "buyerUser",
-	"bank": "bankUser",
-	"seller": "sellerUser",
-	"amount": "100000"
+    "amount": 50000,
+    "customer": "Talent Sprint",
+    "invoiceDate": "20-04-2019",
+    "invoiceId": "KB200",
+    "notes": "good payment",
+    "paymentTerms": "days 30",
+    "status": "Paid",
+    "supplier": "Kill Bill"
   }
-### Get LC History 
- 1. URL -> http://localhost:3000/tfbc/getLCHistory
+### Get Invoice History 
+ 1. URL -> http://localhost:3000/tfbc/getInvoiceHistory
  2. Http Method -> Post
  3. content-type: application/json
  4. Input->
   {
-	"lcId": "LC001"
+	"invoiceId": "KB200"
   }
  5. Output-> 
   {
-    "code": "200",
-    "data": [
-        {
-            "TxId": "f05b3c1cf24da09f657434c7aff7c3a449565421d409a6b3328975858137b826",
-            "Value": {
-                "lcId": "LC001",
-                "expiryDate": "31-Dec-2018",
-                "buyer": "buyerUser",
-                "bank": "bankUser",
-                "seller": "sellerUser",
-                "amount": 100000,
-                "status": "Requested"
-            },
-            "Timestamp": "2018-11-28 13:59:59.79 +0000 UTC",
-            "IsDelete": "false"
-        },
-        {
-            "TxId": "9b7d25533de4d1cb1d3fff1f65d6f1bcaf3821ebedf4a8ffbf7c85fd7e2ff49f",
-            "Value": {
-                "lcId": "LC001",
-                "expiryDate": "31-Dec-2018",
-                "buyer": "buyerUser",
-                "bank": "bankUser",
-                "seller": "sellerUser",
-                "amount": 100000,
-                "status": "Issued"
-            },
-            "Timestamp": "2018-11-28 14:00:36.362 +0000 UTC",
-            "IsDelete": "false"
-        },
-        {
-            "TxId": "0e6ccb1e1fbbd47937979ad981c7865c7f170b0487480322d172ebfaf25f4575",
-            "Value": {
-                "lcId": "LC001",
-                "expiryDate": "31-Dec-2018",
-                "buyer": "buyerUser",
-                "bank": "bankUser",
-                "seller": "sellerUser",
-                "amount": 100000,
-                "status": "Accepted"
-            },
-            "Timestamp": "2018-11-28 14:00:50.469 +0000 UTC",
-            "IsDelete": "false"
-        }
-    ]
+  "code": "200",
+  "data": [
+    {
+      "TxId": "462a18ab161c55214d1121f43ffaa05150fb3b5ec5cedb33210c820cb2a0eefe",
+      "Value": {
+        "invoiceId": "KB200",
+        "invoiceDate": "20-04-2019",
+        "supplier": "Kill Bill",
+        "customer": "Talent Sprint",
+        "paymentTerms": "days 30",
+        "amount": 50000,
+        "notes": "good payment",
+        "status": "Issued"
+      },
+      "Timestamp": "2019-04-20 12:54:20.334 +0000 UTC",
+      "IsDelete": "false"
+    },
+    {
+      "TxId": "0e5bd5d278cf8a836e3612350866404e2e8584e27b2ea6bd32b0d2506fc108a8",
+      "Value": {
+        "invoiceId": "KB200",
+        "invoiceDate": "20-04-2019",
+        "supplier": "Kill Bill",
+        "customer": "Talent Sprint",
+        "paymentTerms": "days 30",
+        "amount": 50000,
+        "notes": "good payment",
+        "status": "Accepted"
+      },
+      "Timestamp": "2019-04-20 12:54:49.991 +0000 UTC",
+      "IsDelete": "false"
+    },
+    {
+      "TxId": "32a8594fd991420ef6053ed18b83a77b76268352c4662d6f632cee1a7360d4ba",
+      "Value": {
+        "invoiceId": "KB200",
+        "invoiceDate": "20-04-2019",
+        "supplier": "Kill Bill",
+        "customer": "Talent Sprint",
+        "paymentTerms": "days 30",
+        "amount": 50000,
+        "notes": "good payment",
+        "status": "Paid"
+      },
+      "Timestamp": "2019-04-20 12:55:18.913 +0000 UTC",
+      "IsDelete": "false"
+    }
+  ]
 }
 
 ## Stop the network
