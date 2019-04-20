@@ -9,37 +9,37 @@ var TFBC = require("./FabricHelper")
 
 
 // Request LC
-router.post('/requestLC', function (req, res) {
+router.post('/issueInvoice', function (req, res) {
 
-TFBC.requestLC(req, res);
+TFBC.issueInvoice(req, res);
 
 });
 
 // Issue LC
-router.post('/issueLC', function (req, res) {
+router.post('/acceptInvoice', function (req, res) {
 
-    TFBC.issueLC(req, res);
+    TFBC.acceptInvoice(req, res);
     
 });
 
 // Accept LC
-router.post('/acceptLC', function (req, res) {
+router.post('/payInvoice', function (req, res) {
 
-    TFBC.acceptLC(req, res);
+    TFBC.payInvoice(req, res);
     
 });
 
 // Get LC
-router.post('/getLC', function (req, res) {
+router.post('/getInvoice', function (req, res) {
 
-    TFBC.getLC(req, res);
+    TFBC.getInvoice(req, res);
     
 });
 
 // Get LC history
-router.post('/getLCHistory', function (req, res) {
+router.post('/getInvoiceHistory', function (req, res) {
 
-    TFBC.getLCHistory(req, res);
+    TFBC.getInvoiceHistory(req, res);
     
 });
 
