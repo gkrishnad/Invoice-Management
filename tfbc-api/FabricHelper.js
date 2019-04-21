@@ -520,7 +520,7 @@ function getInvoice(req, res){
 		// queryAllCars chaincode function - requires no arguments , ex: args: [''],
 		var request = {chaincodeId: 'tfbccc',
 		fcn: 'getInvoice',
-		args: [req.body.invoiceId],
+		args: [req.query.invoiceId],
 		chainId: 'tfbcchannel',
 		};
 	
@@ -591,7 +591,7 @@ function getInvoiceHistory(req, res){
 		// queryAllCars chaincode function - requires no arguments , ex: args: [''],
 		var request = {chaincodeId: 'tfbccc',
 		fcn: 'getInvoiceHistory',
-		args: [req.body.invoiceId],
+		args: [req.query.invoiceId],
 		chainId: 'tfbcchannel',
 		};
 	
