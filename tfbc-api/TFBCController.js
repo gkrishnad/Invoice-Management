@@ -30,14 +30,14 @@ router.post('/payInvoice', function (req, res) {
 });
 
 // Get LC
-router.post('/getInvoice', function (req, res) {
+router.get('/getInvoice', function (req, res) {
 
     TFBC.getInvoice(req, res);
     
 });
 
 // Get LC history
-router.post('/getInvoiceHistory', function (req, res) {
+router.get('/getInvoiceHistory', function (req, res) {
 
     TFBC.getInvoiceHistory(req, res);
     
