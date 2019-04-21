@@ -111,7 +111,7 @@
             }
         },
         "/getInvoice": {
-            "post": {
+            "get": {
                 
                 "summary": "Get Invoice",
                 "description": "Get Invoice",
@@ -121,9 +121,9 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "INVOICE ID object",
+                        "in": "query",
+                        "name": "invoiceId",
+                        "description": "Invoice Id",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/INVOICEID"
@@ -147,7 +147,7 @@
             }
         },
         "/getInvoiceHistory": {
-            "post": {
+            "get": {
                 
                 "summary": "Get Invoice History",
                 "description": "Get Invoice History",
@@ -157,9 +157,9 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "INVOICE ID object",
+                        "in": "query",
+                        "name": "invoiceId",
+                        "description": "Invoice Id",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/INVOICEID"
