@@ -95,7 +95,7 @@ http://localhost:3000/api-docs
   }
 ### Get Invoice Details 
  1. URL -> http://localhost:3000/tfbc/getInvoice
- 2. Http Method -> Post
+ 2. Http Method -> Get
  3. content-type: application/json
  4. Input->
  {
@@ -114,7 +114,7 @@ http://localhost:3000/api-docs
   }
 ### Get Invoice History 
  1. URL -> http://localhost:3000/tfbc/getInvoiceHistory
- 2. Http Method -> Post
+ 2. Http Method -> Get
  3. content-type: application/json
  4. Input->
   {
