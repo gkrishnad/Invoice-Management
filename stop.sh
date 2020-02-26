@@ -5,4 +5,7 @@ docker rm $(docker ps -aq)
 
 docker ps -a
 
+docker volume prune
+
+docker network prune
 
